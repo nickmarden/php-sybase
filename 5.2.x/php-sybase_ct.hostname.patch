@@ -1,0 +1,47 @@
+--- php-5.2.8.orig/ext/sybase_ct/php_sybase_ct.c	2004-07-21 09:25:27.000000000 -0700
++++ php-5.2.8/ext/sybase_ct/php_sybase_ct.c	2006-03-16 14:35:40.844714168 -0800
+@@ -500,8 +500,42 @@
+ 	}
+ 
+ 	if (SybCtG(hostname)) {
+-		ct_con_props(sybase->connection, CS_SET, CS_HOSTNAME, SybCtG(hostname), CS_NULLTERM, NULL);
+-	}
++            char my_hostname[256];
++            if( 0 == gethostname( my_hostname, 255 ) ) {
++                char *period;
++                if( period = strstr( my_hostname, "." ) ) {
++                    *period = 0;
++                }
++                char *p;
++                char *complete_hostname = (char*)malloc( 256*sizeof(char) );
++                char *q = complete_hostname;
++                for( p = SybCtG(hostname); *p != 0; p++ ) {
++                    if( p == strstr( p, "{HOSTNAME}" ) ) {
++                        char *h = my_hostname;
++                        while( *h != 0 ) { 
++                            *q++ = *h++;
++                        }
++                        p += strlen( "{HOSTNAME}" ) - 1;
++                    } else {
++                        *q++ = *p;
++                    }
++                }
++                *q = 0;
++	        ct_con_props(sybase->connection, CS_SET, CS_HOSTNAME, complete_hostname, CS_NULLTERM, NULL);
++                free(complete_hostname);
++            } else {
++	        ct_con_props(sybase->connection, CS_SET, CS_HOSTNAME, SybCtG(hostname), CS_NULLTERM, NULL);
++            }
++        } else {
++            char my_hostname[256];
++            if( 0 == gethostname( my_hostname, 255 ) ) {
++                char *period;
++                if( period = strstr( my_hostname, "." ) ) {
++                    *period = 0;
++                }
++	        ct_con_props(sybase->connection, CS_SET, CS_HOSTNAME, my_hostname, CS_NULLTERM, NULL);
++            }
++        }
+ 
+ 	if (charset) {
+ 		if (cs_loc_alloc(SybCtG(context), &tmp_locale)!=CS_SUCCEED) {

@@ -1,0 +1,108 @@
+OVERVIEW
+--------
+
+This directory contains several patches for the PHP 4.4.x and 5.2.x
+sybase-ct modules. These patches can be applied to the ext/sybase_ct
+directory of a PHP 4.4.x (or 5.2.x) distribution, and then enabled with
+--with-sybase-ct=$SYBASE
+
+I wrote these patches because I was forced to work with both PHP and
+Sybase, a fact which nearly caused me to lose my sanity. I hope you
+are able to keep yours.
+
+Also, if you find these patches useful, please help me by petitioning
+for their acceptance in the mainstream PHP codebase:
+
+https://bugs.php.net/bug.php?id=41190
+
+Please note that PHP 4.4.x is deprecated and therefore I've done no
+testing to make sure that these patches work in their current form
+against the current stable version (4.4.9) of the 4.x branch.
+They worked with 4.4.7; that's all I'm willing to say on the subject.
+
+PATCHES
+-------
+
+The available patches are:
+
+php-sybase_ct.v15.patch
+-----------------------
+Adds the correct link libraries to the Sybase build procedure. Only use
+this if your build is complaining about missing libraries during the link
+phase.
+
+php-sybase_ct.hostname.patch:
+-----------------------------
+Corrects (IMO) the behavior of sybct.hostname to default to the hostname of
+the current system. It also supports {HOSTNAME} as a substitution variable
+in the sybct.hostname parameter, in case you want to decorate the default
+value with additional information.
+
+php-sybase_ct.return_status-and-output_params.patch
+---------------------------------------------------
+Adds the sybase_return_status and sybase_output_params functions.
+
+Note that in both functions, the input parameter "$result" is 
+understood to be the return value from the sybase_query() function,
+e.g.
+
+$result = sybase_query($sql);
+
+The functions behave as follows:
+
+(o) sybase_return_status ($result) - returns the value of the
+    last 'return' statement that occured in the call to sybase_query()
+    that returned <result>.  In theory there could be more than one
+    return statement, if for example your SQL statement called two
+    stored procedures that both call return. You wouldn't be silly
+    enough to do that, would you?
+
+    Anyway, the return value of sybase_return_status is an integer.
+    It is set to FALSE if no return value was set during the last call
+    and 0 if the return value was zero. The return value will only
+    be set if a stored procedure was called, but NOTE that any call
+    to a stored procedure will result in an implicit return value
+    of 0, even if no RETURN statement occurs in the stored procedure.
+    This is a "feature" of Sybase, not this patch.
+
+(o) sybase_output_params ($result) - returns a hash (associative
+    array) of output parameter names and values that were processed
+    during the call to sybase_query() that produced <result>. So this
+    looks like
+
+    array (
+        @output_param1 => 'an output value',
+        @output_param2 => 17,
+        ...
+    )
+
+    Just use list() and each() to iterate through the hash like
+    you would with any hash in PHP. 
+
+    The return value will be false if there were no output 
+    parameters returned from the SQL statement. Thus your
+    flow control can look like this
+
+        if( $output_params = sybase_output_params($result) ) {
+            // handle processing ...
+        }
+
+    and be meaningful.
+
+TESTING
+-------
+
+Once you've applied these patches to your PHP source tree and have
+installed your newly patched module, you can test the new functionality
+as follows:
+
+1. Run the included SQL file to create a stored procedure that will
+exercise the new functionality:
+
+isql -S SERVER -U user -P password -i testing.sql
+
+2. Copy the attached file testing.php into your document root and then
+modify it to include your server, username, and password. Then visit
+it with a web browser and verify that the results are as follows:
+
+
