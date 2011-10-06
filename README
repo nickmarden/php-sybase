@@ -1,9 +1,9 @@
 OVERVIEW
 --------
 
-This directory contains several patches for the PHP 4.4.x and 5.2.x
+This directory contains several patches for the PHP 4.4.7 and 5.2.0
 sybase-ct modules. These patches can be applied to the ext/sybase_ct
-directory of a PHP 4.4.x (or 5.2.x) distribution, and then enabled with
+directory of a PHP 4.4.7 (or 5.2.0) distribution, and then enabled with
 --with-sybase-ct=$SYBASE
 
 I wrote these patches because I was forced to work with both PHP and
@@ -15,7 +15,7 @@ for their acceptance in the mainstream PHP codebase:
 
 https://bugs.php.net/bug.php?id=41190
 
-Please note that PHP 4.4.x is deprecated and therefore I've done no
+Please note that PHP 4.x is deprecated and therefore I've done no
 testing to make sure that these patches work in their current form
 against the current stable version (4.4.9) of the 4.x branch.
 They worked with 4.4.7; that's all I'm willing to say on the subject.
@@ -30,6 +30,9 @@ php-sybase_ct.v15.patch
 Adds the correct link libraries to the Sybase build procedure. Only use
 this if your build is complaining about missing libraries during the link
 phase.
+
+See http://www.php.net/manual/en/ref.sybase.php#76954 for more discussion
+of alternative approaches to make PHP work with Sybase 15.
 
 php-sybase_ct.hostname.patch:
 -----------------------------
@@ -103,6 +106,5 @@ isql -S SERVER -U user -P password -i testing.sql
 
 2. Copy the attached file testing.php into your document root and then
 modify it to include your server, username, and password. Then visit
-it with a web browser and verify that the results are as follows:
-
+it with a web browser and verify that you can load the page OK.
 

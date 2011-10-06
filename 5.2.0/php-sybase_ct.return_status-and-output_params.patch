@@ -1,5 +1,5 @@
---- php-5.2.8-orig/ext/sybase_ct/php_sybase_ct.h	2006-01-01 04:50:16.000000000 -0800
-+++ php-5.2.8/ext/sybase_ct/php_sybase_ct.h	2007-04-24 12:55:36.000000000 -0700
+--- php-5.2.0-orig/ext/sybase_ct/php_sybase_ct.h	2006-01-01 04:50:16.000000000 -0800
++++ php-5.2.0/ext/sybase_ct/php_sybase_ct.h	2007-04-24 12:55:36.000000000 -0700
 @@ -56,6 +56,8 @@
  PHP_FUNCTION(sybase_min_client_severity);
  PHP_FUNCTION(sybase_min_server_severity);
@@ -26,8 +26,8 @@
  	
  	/* For unbuffered reads */
  	CS_INT *lengths;
---- php-5.2.8-orig/ext/sybase_ct/php_sybase_ct.c	2006-07-25 02:20:32.000000000 -0700
-+++ php-5.2.8/ext/sybase_ct/php_sybase_ct.c	2007-04-24 12:55:36.000000000 -0700
+--- php-5.2.0-orig/ext/sybase_ct/php_sybase_ct.c	2006-07-25 02:20:32.000000000 -0700
++++ php-5.2.0/ext/sybase_ct/php_sybase_ct.c	2007-04-24 12:55:36.000000000 -0700
 @@ -61,6 +61,8 @@
  	PHP_FE(sybase_field_seek, NULL)
  	PHP_FE(sybase_result, NULL)

@@ -1,5 +1,5 @@
---- php-5.2.8.orig/ext/sybase_ct/php_sybase_ct.c	2004-07-21 09:25:27.000000000 -0700
-+++ php-5.2.8/ext/sybase_ct/php_sybase_ct.c	2006-03-16 14:35:40.844714168 -0800
+--- php-5.2.0.orig/ext/sybase_ct/php_sybase_ct.c	2004-07-21 09:25:27.000000000 -0700
++++ php-5.2.0/ext/sybase_ct/php_sybase_ct.c	2006-03-16 14:35:40.844714168 -0800
 @@ -500,8 +500,42 @@
  	}
  
